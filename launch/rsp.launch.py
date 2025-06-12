@@ -1,6 +1,7 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import get_package_share_path
 
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
@@ -12,7 +13,7 @@ import xacro
 
 def generate_launch_description():
 
-    pkg_name = 'amr_sim_YYYY_NNAA' #<------CHANGE ME
+    pkg_name = 'amr_sim_2511_golf' #<------CHANGE ME
 
     # Check if we're told to use sim time
     use_sim_time = LaunchConfiguration('use_sim_time')
@@ -31,6 +32,18 @@ def generate_launch_description():
         parameters=[params]
     )
 
+    pkg_path = os.path.join(get_package_share_path(pkg_name))
+    default_rviz_config_path = os.path.join(pkg_path + '/config/rviz_config.rviz')
+    rviz_arg = DeclareLaunchArgument(name='rvizmodel', default_value=str(default_rviz_config_path), description='Absolute path to rviz model file')
+
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=['-d', LaunchConfiguration('rvizmodel')],
+    )
+
 
     # Launch!
     return LaunchDescription([
@@ -39,5 +52,7 @@ def generate_launch_description():
             default_value='false',
             description='Use sim time if true'),
 
-        node_robot_state_publisher
+        node_robot_state_publisher,
+        rviz_arg,
+        rviz_node,
     ])

@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">   
+
+    <xacro:property name="kinect_link" value="0.05" /> <!-- Size of square 'kinect' box -->
+
+    <joint name="kinect_joint" type="fixed">
+        <axis xyz="0 0 0" />
+        <origin xyz="${0.3+kinect_link/4} 0 ${0.15-kinect_link/2}" rpy="0 0 0"/>
+        <parent link="chassis"/>
+        <child link="kinect_link"/>
+    </joint>
+    
+    <!-- kinect -->
+    <link name="kinect_link">
+        
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+        <box size="${kinect_link/2} ${kinect_link*3} ${kinect_link}"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+        <box size="${kinect_link/2} ${kinect_link*3} ${kinect_link}"/>
+            </geometry>
+        </collision>
+
+        <xacro:inertial_box mass="0.005" x="${kinect_link/2}" y="${kinect_link*3}" z="${kinect_link}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <link name="kinect_optical_link"/>
+        <joint name="kinect_optical_joint" type="fixed">
+        <parent link="kinect_link"/>
+        <child link="kinect_optical_link"/>
+        <!-- Optical frame: X forward, Y left, Z down -->
+        <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/> <!-- -90° around X, then -90° around Z -->
+    </joint>
+
+    <gazebo reference="kinect_link">
+        <material>Gazebo/Blue</material>
+        <gravity>true</gravity>
+    
+        <sensor name="kinect_camera" type="depth">
+            <update_rate>20</update_rate>
+            <alwaysOn>true</alwaysOn>
+
+            <camera name="kinect_ir">
+                <horizontal_fov>1.047198</horizontal_fov>
+                <image>
+                    <width>1280</width>
+                    <height>720</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>3</far>
+                </clip>
+
+                <distortion>
+                    <k1>0.0</k1>
+                    <k2>0.0</k2>
+                    <k3>0.0</k3>
+                    <p1>0.0</p1>
+                    <p2>0.0</p2>
+                    <center>0.5 0.5</center>
+                </distortion>
+            </camera>
+
+            <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+                <camera_name>kinect_ir</camera_name>
+                <frame_name>kinect_optical_link</frame_name>
+                
+                <hack_baseline>0.07</hack_baseline>
+                <min_depth>0.001</min_depth>
+            </plugin>
+        </sensor>
+    </gazebo>
+</robot>
