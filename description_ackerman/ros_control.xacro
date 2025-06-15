@@ -3,24 +3,36 @@
 
     <ros2_control name="steering_control" type="system">
       <hardware>
-        <plugin>ros2_control_demo_example_11/CarlikeBotSystemHardware</plugin>
-        <param name="example_param_hw_start_duration_sec">0</param>
-        <param name="example_param_hw_stop_duration_sec">3.0</param>
+        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
       </hardware>
+      
       <joint name="virtual_front_wheel_joint">
-        <command_interface name="position"/>
+        <command_interface name="position">
+          <param name="min">-0.785</param>
+          <param name="max">0.785</param>
+        </command_interface>
         <state_interface name="position"/>
       </joint>
+
+    
+
       <joint name="virtual_rear_wheel_joint">
         <command_interface name="velocity"/>
         <state_interface name="velocity"/>
         <state_interface name="position"/>
       </joint>
+
+
+
     </ros2_control>
 
     <gazebo>
       <plugin  name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
         <parameters>$(find amr_sim_2511_golf)/config/controller.yaml</parameters>
+        <ros>
+          <remapping> /bicycle_steering_controller/tf_odometry:=/tf </remapping>
+          <remapping> /bicycle_steering_controller/reference:=/cmd_vel_stamped </remapping>
+        </ros>  
       </plugin>
     </gazebo>
 

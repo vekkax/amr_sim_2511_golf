@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">   
 
-    <xacro:property name="kinect_link" value="0.05" /> <!-- Size of square 'kinect' box -->
+    <xacro:property name="kinect_link" value="0.05" /> 
 
     <joint name="kinect_joint" type="fixed">
         <axis xyz="0 0 0" />
@@ -10,7 +10,6 @@
         <child link="kinect_link"/>
     </joint>
     
-    <!-- kinect -->
     <link name="kinect_link">
         
         <visual>
@@ -37,8 +36,7 @@
         <joint name="kinect_optical_joint" type="fixed">
         <parent link="kinect_link"/>
         <child link="kinect_optical_link"/>
-        <!-- Optical frame: X forward, Y left, Z down -->
-        <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/> <!-- -90° around X, then -90° around Z -->
+        <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/> 
     </joint>
 
     <gazebo reference="kinect_link">

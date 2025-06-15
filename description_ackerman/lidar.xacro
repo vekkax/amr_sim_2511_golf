@@ -1,14 +1,12 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!-- lidar joint -->
     <joint name="laser_joint" type="fixed">
         <parent link="chassis_link"/>
         <child link="laser_frame"/>
         <origin xyz="-0.25 0 0.125" rpy="0 0 0"/>  
     </joint>
 
-    <!-- laser_frame -->
     <link name="laser_frame">
         <visual>
             <geometry>
@@ -35,9 +33,7 @@
             <ray>
                 <scan>
                     <horizontal>
-                        <!--samples> is the number of simulated lidar rays to generate per complete laser sweep cycle.-->
                         <samples>360</samples>
-                        <!--resolution>: this number is multiplied by samples to determine the number range data points.-->
                         <resolution>1</resolution>
                         <min_angle>-3.14</min_angle>
                         <max_angle>3.14</max_angle>

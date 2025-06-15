@@ -87,7 +87,7 @@ def generate_launch_description():
             description='Use sim time if true'),
 
         vel_stamper,
-        control_node,
+        #control_node,
         robot_state_pub_bicycle_node,
         robot_bicycle_controller_spawner,
         delay_joint_state_broadcaster_after_robot_controller_spawner,
