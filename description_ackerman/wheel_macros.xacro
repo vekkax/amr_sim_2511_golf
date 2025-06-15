@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot name="cylinder_wheel" 
+  xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  
+
+  <xacro:include filename="inertial_macros.xacro" />
+
+  <xacro:macro name="cylinder_wheel" params="name wr wh wm parent xpos ypos mimic axis">
+    <link name="${name}_wheel">
+      <visual>
+        <geometry>
+          <cylinder length="${wh}" radius="${wr}" />
+        </geometry>
+        <origin rpy="1.57 0 0" xyz="0 0 0" />
+        <material name="blue" />
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder length="${wh}" radius="${wr}" />
+        </geometry>
+        <origin rpy="1.57 0 0" xyz="0 0 0" />
+      </collision>
+
+      <xacro:inertial_cylinder mass='${wm}' length='${wh}' radius='${wr}'>
+        <origin rpy="1.57 0 0" xyz="0 0 0" />
+      </xacro:inertial_cylinder>
+
+
+    </link>
+
+    <joint name="${name}_wheel_joint" type="continuous">
+      <parent link="${parent}" />
+      <child link="${name}_wheel" />
+      <origin xyz="${xpos} ${ypos} 0" rpy="0 0 0" />
+      <axis xyz="${axis}" rpy="0 0 0" />
+      <limit effort="1000" velocity="100" />
+      <joint_properties damping="0.0" friction="10.0" />
+      <mimic joint="virtual_${mimic}_wheel_joint" multiplier="1.0" offset="0.0"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>

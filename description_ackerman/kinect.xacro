@@ -5,8 +5,8 @@
 
     <joint name="kinect_joint" type="fixed">
         <axis xyz="0 0 0" />
-        <origin xyz="${0.3+kinect_link/4} 0 ${0.15-kinect_link/2}" rpy="0 0 0"/>
-        <parent link="chassis"/>
+        <origin xyz="${0.3+kinect_link/4} 0 ${0.05+kinect_link/2}" rpy="0 0 0"/>
+        <parent link="chassis_link"/>
         <child link="kinect_link"/>
     </joint>
     

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+    <!-- Imu_frame -->
+    <link name="imu_frame">
+        <visual>
+            <origin xyz="0 0 0"/>
+            <geometry>
+                <box size="0.01 0.01 0.005"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <xacro:inertial_box mass="0.005" x="0.01" y="0.01" z="0.005">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_box>
+        <collision>
+            <origin xyz="0 0 0"/>
+            <geometry>
+                <box size="0.1 0.1 0.01"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-- Imu joint -->
+    <joint name="imu_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="imu_frame"/>
+        <origin xyz="0 0 0.052" rpy="0 0 0"/>  
+    </joint>
+
+
+    <gazebo reference="imu_frame">
+        <material>Gazebo/Red</material>
+        <gravity>true</gravity>
+        <sensor name="imu_sensor" type="imu">
+            <always_on>true</always_on>
+            <update_rate>20</update_rate>
+            <visualize>true</visualize>
+            <!--Sensor will be published for the default topic-->
+            <topic>__default_topic__</topic>
+            <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+                <!--Sensor data will be published for the default topic-->
+                <topicName>imu</topicName>
+                <bodyName>imu_frame</bodyName>
+                <updateRateHZ>20.0</updateRateHZ>
+                <gaussianNoise>0.0</gaussianNoise>
+                <!--Offsets from the reference link reference frame-->
+                <xyzOffset>0 0 0</xyzOffset>
+                <rpyOffset>0 0 0</rpyOffset>
+                <frameName>imu_frame</frameName>
+                <!--Sensor doesn't calibrate to the initial position-->
+                <!--So world is tajen as reference-->
+                <initialOrientationAsReference>false</initialOrientationAsReference>
+                <ros>
+                    <!--Output topic: scan-->
+                    <remapping>~/out:=/imu</remapping>
+                </ros>  
+            </plugin>
+            <pose>0 0 0 0 0 0</pose>
+        </sensor>
+  </gazebo>
+
+
+</robot>

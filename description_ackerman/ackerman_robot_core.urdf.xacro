@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<robot name="ackrm_robot" 
+  xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!--MATERIALS-->
+  
+
+  <!-- XACRO PROPERTIES -->
+  <xacro:property name="PI" value="3.1415926535897931"/>
+  <xacro:property name="chassis_length" value="0.8" />
+  <xacro:property name="chassis_width" value="0.4" />
+  <xacro:property name="chassis_heigth" value="0.1" />
+  <xacro:property name="chassis_mass" value="${chassis_length*chassis_width*chassis_heigth*500}" />
+  <xacro:property name="wheel_radius" value="0.1" />
+  <xacro:property name="wheel_heigth" value="0.05" />
+  <xacro:property name="wheel_mass" value="${pi*wheel_radius*wheel_radius*wheel_heigth*500}" />
+  
+  <!-- XACRO LIBRARIES -->
+  <xacro:include filename="wheel_macros.xacro" />
+
+
+<!-- Example link -->
+<link name="base_link">
+</link>
+
+<joint name="chassis_joint" type="fixed">
+  <parent link="base_link"/>
+  <child link="chassis_link"/>
+  <origin xyz="0 0 0"/>    
+</joint>
+
+  <!-- chassis LINK DEFINITION -->
+  <link name="chassis_link">
+    <visual>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_heigth}" />
+      </geometry>
+      <material name="white" />
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_heigth}" />
+      </geometry>
+    </collision>
+
+    <xacro:inertial_box mass="${chassis_mass}" x="${chassis_length}" y="${chassis_width}" z="${chassis_heigth}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_box>  
+    
+  </link>
+
+  <!-- VIRTUAL WHEELS-->
+  <!-- virtual front wheel -->
+
+  <link name="virtual_front_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="${PI/2} 0 ${PI/2}"/>
+      <geometry>
+        <cylinder length="0.01" radius="${wheel_radius}"/>
+      </geometry>
+      <material name="invisible"/>
+    </visual>
+  </link>
+
+  <joint name="virtual_front_wheel_joint" type="revolute">
+    <parent link="chassis_link"/>
+    <child link="virtual_front_wheel"/>
+    <origin xyz="0.35 0 0" rpy="0 0 ${PI/2}"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-${PI/4}" upper="${PI/4}" effort="100.0" velocity="0.0"/>
+    <dynamics damping="0.2"/>
+  </joint>
+
+  <!-- virtual back wheel -->
+
+  <link name="virtual_rear_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="${PI/2} 0 ${PI/2}"/>
+      <geometry>
+        <cylinder length="0.01" radius="${wheel_radius}"/>
+      </geometry>
+      <material name="invisible"/>
+    </visual>
+  </link>
+
+  <joint name="virtual_rear_wheel_joint" type="continuous">
+    <parent link="chassis_link"/>
+    <child link="virtual_rear_wheel"/>
+    <origin xyz="-0.35 0 0" rpy="0 0 ${PI/2}"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="100.0" velocity="100.0"/>
+    <dynamics damping="0.2"/>
+  </joint>
+
+  <!-- WHEELS MACRO CALL -->
+  <xacro:cylinder_wheel name="rear_right" 
+    wr="${wheel_radius}" 
+    wh="${wheel_heigth}" 
+    wm="${wheel_mass}" 
+    parent="chassis_link" 
+    xpos="-0.35" 
+    ypos="-0.35"
+    mimic="rear" 
+    axis= "0 1 0"/>
+
+  <xacro:cylinder_wheel name="rear_left" 
+    wr="${wheel_radius}" 
+    wh="${wheel_heigth}" 
+    wm="${wheel_mass}" 
+    parent="chassis_link" 
+    xpos="-0.35" 
+    ypos="0.35" 
+    mimic="rear"
+    axis="0 1 0"/>
+
+  <xacro:cylinder_wheel name="front_right" 
+    wr="${wheel_radius}" 
+    wh="${wheel_heigth}" 
+    wm="${wheel_mass}" 
+    parent="chassis_link" 
+    xpos="0.35" 
+    ypos="0.35" 
+    mimic="front" 
+    axis="0 0 1"/>
+
+  <xacro:cylinder_wheel name="front_left" 
+    wr="${wheel_radius}" 
+    wh="${wheel_heigth}" 
+    wm="${wheel_mass}" 
+    parent="chassis_link" 
+    xpos="0.35" 
+    ypos="-0.35"
+    mimic="front" 
+    axis="0 0 1"/>
+
+</robot>
