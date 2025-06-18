@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">   
 
-    <xacro:property name="kinect_link" value="0.05" /> 
+    <xacro:property name="kinect_length" value="0.09" /> 
+    <xacro:property name="kinect_heigth" value="0.03" /> 
+    <xacro:property name="kinect_width" value="0.03" />
+    <xacro:property name="kinect_mass" value="0.5" /> 
+ 
 
     <joint name="kinect_joint" type="fixed">
         <axis xyz="0 0 0" />
-        <origin xyz="${0.3+kinect_link/4} 0 ${0.05+kinect_link/2}" rpy="0 0 0"/>
+        <origin xyz="${chassis_length/2-kinect_width/2} 0 ${wheel_radius+kinect_heigth/2}" rpy="0 0 0"/>
         <parent link="chassis_link"/>
         <child link="kinect_link"/>
     </joint>
@@ -15,7 +19,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
-        <box size="${kinect_link/2} ${kinect_link*3} ${kinect_link}"/>
+        <box size="${kinect_width} ${kinect_length} ${kinect_heigth}"/>
             </geometry>
             <material name="blue"/>
         </visual>
@@ -23,11 +27,11 @@
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
-        <box size="${kinect_link/2} ${kinect_link*3} ${kinect_link}"/>
+        <box size="${kinect_width} ${kinect_length} ${kinect_heigth}"/>
             </geometry>
         </collision>
 
-        <xacro:inertial_box mass="0.005" x="${kinect_link/2}" y="${kinect_link*3}" z="${kinect_link}">
+        <xacro:inertial_box mass="${kinect_mass}" x="${kinect_width}" y="${kinect_length}" z="${kinect_heigth}">
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_box>
     </link>
@@ -36,7 +40,7 @@
         <joint name="kinect_optical_joint" type="fixed">
         <parent link="kinect_link"/>
         <child link="kinect_optical_link"/>
-        <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/> 
+        <origin xyz="0 0 0" rpy="-${PI/2} 0 -${PI/2}"/> 
     </joint>
 
     <gazebo reference="kinect_link">

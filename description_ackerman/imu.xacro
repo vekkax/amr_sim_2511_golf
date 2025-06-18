@@ -1,22 +1,27 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <xacro:property name="imu_length" value="0.01" /> 
+    <xacro:property name="imu_heigth" value="0.005" /> 
+    <xacro:property name="imu_width" value="0.01" /> 
+    <xacro:property name="imu_mass" value="0.001" /> 
+
 
     <link name="imu_frame">
         <visual>
             <origin xyz="0 0 0"/>
             <geometry>
-                <box size="0.01 0.01 0.005"/>
+                <box size="${imu_width} ${imu_length} ${imu_heigth}"/>
             </geometry>
             <material name="red"/>
         </visual>
-        <xacro:inertial_box mass="0.005" x="0.01" y="0.01" z="0.005">
+        <xacro:inertial_box mass="${imu_mass}" x="${imu_width}" y="${imu_length}" z="${imu_heigth}">
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_box>
         <collision>
             <origin xyz="0 0 0"/>
             <geometry>
-                <box size="0.1 0.1 0.01"/>
+                <box size="${imu_width} ${imu_length} ${imu_heigth}"/>
             </geometry>
         </collision>
     </link>
@@ -25,7 +30,7 @@
     <joint name="imu_joint" type="fixed">
         <parent link="chassis_link"/>
         <child link="imu_frame"/>
-        <origin xyz="0 0 0.052" rpy="0 0 0"/>  
+        <origin xyz="0 0 ${chassis_heigth/2+imu_heigth/2}" rpy="0 0 0"/>  
     </joint>
 
 
