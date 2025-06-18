@@ -2,14 +2,14 @@ twist_mux:
   ros__parameters:
     topics:
       navigation:
-        topic   : cmd_vel
-        timeout : 0.005
+        topic   : cmd_vel_nav
+        timeout : 0.05
         priority: 10
       joystick  : 
         topic   : cmd_vel_joy
-        timeout : 0.005
-        priority: 50
+        timeout : 0.05
+        priority: 225
       AEB  : 
         topic   : cmd_vel_aeb
-        timeout : 0.005
-        priority: 100
+        timeout : 0.05
+        priority: 255

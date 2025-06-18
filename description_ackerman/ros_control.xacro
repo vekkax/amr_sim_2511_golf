@@ -31,7 +31,8 @@
         <parameters>$(find amr_sim_2511_golf)/config/controller.yaml</parameters>
         <ros>
           <remapping> /bicycle_steering_controller/tf_odometry:=/tf </remapping>
-          <remapping> /bicycle_steering_controller/reference:=/cmd_vel_stamped </remapping>
+          <remapping> /bicycle_steering_controller/reference_unstamped:=/cmd_vel </remapping>
+          <remapping> /bicycle_steering_controller/odometry:=/odometry </remapping>
         </ros>  
       </plugin>
     </gazebo>
